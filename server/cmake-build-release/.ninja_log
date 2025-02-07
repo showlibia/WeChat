@@ -1,6 +1,0 @@
-# ninja log v5
-1	9280	1738917672507770836	CMakeFiles/server.dir/CServer.cpp.o	f9ed470a4f24751f
-6	11153	1738917990737798277	CMakeFiles/server.dir/HttpConnection.cpp.o	58953296ee1f841d
-1	9289	1738917672517770838	CMakeFiles/server.dir/GateServer.cpp.o	fafd556ecd15b348
-7	4384	1738917983967797658	CMakeFiles/server.dir/LogicSystem.cpp.o	55aa8636b3a35f12
-11153	11448	1738917991037798298	server	93d8f8a3b062f20c

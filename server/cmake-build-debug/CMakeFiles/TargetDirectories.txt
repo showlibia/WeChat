@@ -1,3 +1,0 @@
-/home/matrix/project/WeChat/server/cmake-build-debug/CMakeFiles/server.dir
-/home/matrix/project/WeChat/server/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/matrix/project/WeChat/server/cmake-build-debug/CMakeFiles/rebuild_cache.dir
