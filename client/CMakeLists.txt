@@ -11,6 +11,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(app_icon_resource "${CMAKE_CURRENT_SOURCE_DIR}/icon.rc")
 
+# 设定源文件路径
+set(TargetConfig "${CMAKE_SOURCE_DIR}/config.ini")
+
+# 设定目标路径
+set(OutputDir "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}")
+
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Network)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Network)
 
@@ -33,6 +39,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         registerdialog.h registerdialog.cpp registerdialog.ui
         global.h global.cpp
         singleton.h
+        config.ini
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET WeChat APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -74,6 +81,14 @@ install(TARGETS WeChat
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+
+# 添加构建后命令
+add_custom_command(
+    TARGET WeChat
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${TargetConfig}" "${OutputDir}/config.ini"
+    COMMENT "Copying config.ini to output directory"
 )
 
 if(QT_VERSION_MAJOR EQUAL 6)

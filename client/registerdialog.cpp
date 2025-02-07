@@ -16,7 +16,8 @@ RegisterDialog::RegisterDialog(QWidget *parent)
     ui->err_tip->setProperty("state", "normal");
     repolish(ui->err_tip);
 
-    connect(HttpMgr::GetInstance().get(), &HttpMgr::slot_http_finish, this, &RegisterDialog::slot_reg_mod_finish);
+    connect(HttpMgr::GetInstance().get(), &HttpMgr::sig_reg_mod_finish, this, &RegisterDialog::slot_reg_mod_finish);
+    initHttpHandlers();
 }
 
 RegisterDialog::~RegisterDialog()
@@ -31,6 +32,14 @@ void RegisterDialog::on_get_code_clicked()
     bool match = regex.match(email).hasMatch();
     if(match) {
         // 发送http请求获取验证码
+        QJsonObject json_obj;
+        json_obj["email"] = email;
+        HttpMgr::GetInstance()->PostHttpReq(
+            QUrl(gate_url_prefix + "/get_verifycode"),
+            json_obj,
+            ReqId::ID_GET_VERIFY_CODE,
+            Modules::REGESTERMOD
+            );
     } else {
         showTip(tr("邮箱地址不正确"), false);
     }

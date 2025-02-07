@@ -15,11 +15,12 @@ void HttpMgr::PostHttpReq(QUrl url, QJsonObject json, ReqId req_id, Modules mod)
     // 利用shared_from_this()获取当前对象的shared_ptr, 构建伪闭包，防止对象提前析构
     auto self = shared_from_this();
     QNetworkReply * reply = _manager.post(request, data);
-    connect(reply, &QNetworkReply::finished, [self, reply, req_id, mod]() {
+    // 设置信号和槽等待发送完成;
+    QObject::connect(reply, &QNetworkReply::finished, [self, reply, req_id, mod]() {
         if (reply->error() != QNetworkReply::NoError) {
             qDebug() << reply->errorString();
             // 发送信号完成
-            emit self->sig_http_finish(req_id, "", ERR_NETWORK, mod);
+            emit self->sig_http_finish(req_id, "", ErrorCodes::ERR_NETWORK, mod);
             reply->deleteLater();
             return;
         }
@@ -28,7 +29,7 @@ void HttpMgr::PostHttpReq(QUrl url, QJsonObject json, ReqId req_id, Modules mod)
         QString res = reply->readAll();
 
         // 发送信号完成
-        emit self->sig_http_finish(req_id, res, SUCCESS, mod);
+        emit self->sig_http_finish(req_id, res, ErrorCodes::SUCCESS, mod);
         reply->deleteLater();
         return;
     });

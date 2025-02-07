@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>res/ice.png</file>
         <file>style/stylesheet.qss</file>
+        <file>config.ini</file>
     </qresource>
 </RCC>

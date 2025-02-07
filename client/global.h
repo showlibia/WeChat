@@ -8,6 +8,10 @@
 #include <mutex>
 #include <memory>
 #include "QStyle"
+#include <QSettings>
+#include <QDir>
+
+extern QString gate_url_prefix;
 
 /**
  * @brief repolish 用来刷新qss
