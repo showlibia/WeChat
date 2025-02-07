@@ -1,0 +1,14 @@
+# ninja log v5
+13	6887	1738935293179284510	CMakeFiles/server.dir/CServer.cpp.o	361f16dba5e459f2
+6	8911	1738935368129290632	CMakeFiles/server.dir/HttpConnection.cpp.o	7c43260d534bf005
+2	22	1738936552079391161	build.ninja	995299348120ff54
+14	6675	1738935292969284532	CMakeFiles/server.dir/GateServer.cpp.o	c3f5c0575f571d94
+1	409	1738855889024141030	CMakeFiles/server.dir/main.cpp.o	f9a02262cd1fe71e
+6	5139	1738935364369290291	CMakeFiles/server.dir/LogicSystem.cpp.o	702e34dbb4d3d2dd
+1	14	1738855998974108792	CMakeFiles/server.dir/HttpConnect.cpp.o	430d31545bf61544
+9196	9659	1738931058008920510	server	2c5c69483fed771c
+6	6145	1738936563189392923	CMakeFiles/server.dir/LogicSystem.cpp.o	7257ed34172422f4
+6	6334	1738936563369392954	CMakeFiles/server.dir/GateServer.cpp.o	f75dc1e95aed36d3
+5	6498	1738936563539392984	CMakeFiles/server.dir/CServer.cpp.o	a277e6d4ede45e6e
+6	9646	1738936566679393413	CMakeFiles/server.dir/HttpConnection.cpp.o	28a1d6fb4fc8f1bd
+9646	10139	1738936567179393478	server	abdd6ddf7c8df6bf
