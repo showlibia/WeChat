@@ -1,5 +1,0 @@
-/home/matrix/.cache/JetBrains/RemoteDev/dist/3d8b36b2566c3_CLion-241.14494.229/bin/cmake/linux/x64/bin/cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_MAKE_PROGRAM=/home/matrix/.cache/JetBrains/RemoteDev/dist/3d8b36b2566c3_CLion-241.14494.229/bin/ninja/linux/x64/ninja -G Ninja -S /home/matrix/project/WeChat/server -B /home/matrix/project/WeChat/server/cmake-build-release
--- Found RE2 via pkg-config.
--- Configuring done (3.5s)
--- Generating done (0.0s)
--- Build files have been written to: /home/matrix/project/WeChat/server/cmake-build-release
