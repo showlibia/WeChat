@@ -1,0 +1,24 @@
+/home/matrix/.cache/JetBrains/RemoteDev/dist/3d8b36b2566c3_CLion-241.14494.229/bin/cmake/linux/x64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/home/matrix/.cache/JetBrains/RemoteDev/dist/3d8b36b2566c3_CLion-241.14494.229/bin/ninja/linux/x64/ninja -G Ninja -S /home/matrix/project/WeChat/server/GateServer -B /home/matrix/project/WeChat/server/GateServer/cmake-build-debug
+-- The C compiler identification is GNU 14.2.1
+-- The CXX compiler identification is GNU 14.2.1
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/sbin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/sbin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found ZLIB: /usr/lib/libz.so (found version "1.3.1")  
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE  
+-- Found OpenSSL: /usr/lib/libcrypto.so (found version "3.4.0")  
+-- Found c-ares: /usr/lib/cmake/c-ares/c-ares-config.cmake (found version "1.34.4") 
+-- Found PkgConfig: /usr/sbin/pkg-config (found version "2.3.0") 
+-- Found RE2 via pkg-config.
+-- Configuring done (14.7s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/matrix/project/WeChat/server/GateServer/cmake-build-debug

@@ -1,0 +1,15 @@
+{
+    "email": {
+        "user": "2022302181115.whu@vip.163.com",
+        "pass": "DZv9atbfzs4jSzDs"
+    },
+    "mysql": {
+        "host": "81.68.86.146",
+        "port": 3316
+    },
+    "redis": {
+        "host": "81.68.86.146",
+        "port": 6380,
+        "passwd": 123456
+    }
+}
