@@ -25,8 +25,8 @@ LogicSystem::LogicSystem() {
     });
 
     RegPost("/get_verifycode", [](const std::shared_ptr<HttpConnection>& connect){
-        auto body_str = beast::buffers_to_string(connect->_request.body().cdata());
-        std::cout << "receive body is " << body_str;
+        auto body_str = beast::buffers_to_string(connect->_request.body().data());
+        std::cout << "receive body is " << body_str << std::endl;
         connect->_response.set(http::field::content_type, "text/json");
         Json::Value root; // 发送给客户端的json数据
         Json::Reader reader; // 将json反序列化为对象

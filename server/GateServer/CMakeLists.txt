@@ -14,6 +14,9 @@ set(GENERATED_HDR message.pb.h message.grpc.pb.h
 find_package(Protobuf CONFIG REQUIRED)
 find_package(gRPC CONFIG REQUIRED)
 
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(HIREDIS REQUIRED hiredis)
+
 configure_file(config.ini ${CMAKE_BINARY_DIR}/config.ini COPYONLY)
 
 include_directories(${JSONCPP_INCLUDE_DIRS})
@@ -31,6 +34,11 @@ add_executable(server
         VerifyGrpcClient.h
         VerifyGrpcClient.cpp
         ${GENERATED_SRC}
-        ${GENERATED_HDR})
+        ${GENERATED_HDR}
+        AsioIOContextPool.h
+        AsioIOContextPool.cpp
+        RedisMgr.h
+        RedisMgr.cpp)
 
-target_link_libraries(server ${JSONCPP_LIBRARIES} gRPC::grpc++ protobuf::libprotobuf)
+target_include_directories(server PRIVATE ${HIREDIS_INCLUDE_DIRS})
+target_link_libraries(server PRIVATE ${JSONCPP_LIBRARIES} gRPC::grpc++ protobuf::libprotobuf ${HIREDIS_LIBRARIES})

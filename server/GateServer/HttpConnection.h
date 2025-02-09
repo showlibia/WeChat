@@ -10,8 +10,9 @@
 class HttpConnection : public std::enable_shared_from_this<HttpConnection>{
 public:
     friend class LogicSystem;
-    explicit HttpConnection(tcp::socket socket);
+    explicit HttpConnection(net::io_context& ioc);
     void Start();
+    tcp::socket & GetSocket();
 
 private:
     void CheckDeadline();

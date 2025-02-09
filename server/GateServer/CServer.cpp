@@ -4,14 +4,17 @@
 
 #include "CServer.h"
 #include "HttpConnection.h"
+#include "AsioIOContextPool.h"
 
 CServer::CServer(net::io_context& ioc, unsigned short &port)
-    : _ioc(ioc), _acceptor(ioc, tcp::endpoint(tcp::v4(), port)), _socket(ioc)
+    : _ioc(ioc), _acceptor(ioc, tcp::endpoint(tcp::v4(), port))
 {}
 
 void CServer::Start() {
     auto self = shared_from_this();
-    _acceptor.async_accept(_socket, [self](beast::error_code ec) {
+    auto& io_context = AsioIOContextPool::GetInstance()->GetIOContext();
+    std::shared_ptr<HttpConnection> connection = std::make_shared<HttpConnection>(io_context);
+    _acceptor.async_accept(connection->GetSocket(), [self, connection](beast::error_code ec) {
         try {
             // 出错则放弃此连接，并继续监听新连接
             if(ec) {
@@ -19,7 +22,7 @@ void CServer::Start() {
                 return ;
             }
             // 处理新连接，创建HttpConnection类管理新连接
-            std::make_shared<HttpConnection>(std::move(self->_socket))->Start();
+            connection->Start();
             self->Start();
         } catch (std::exception& e) {
             std::cout << "Error: " << e.what() << std::endl;

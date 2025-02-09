@@ -8,6 +8,7 @@
 #include <filesystem>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/ini_parser.hpp>
+#include <map>
 #include "const.h"
 
 struct SectionInfo {
@@ -38,7 +39,7 @@ struct SectionInfo {
 
 class ConfigMgr {
 public:
-    ConfigMgr();
+
     ~ConfigMgr() {
         _config_map.clear();
     }
@@ -52,13 +53,18 @@ public:
         _config_map = other._config_map;
     }
     ConfigMgr& operator=(const ConfigMgr& other) {
-        if(&other == this) {
+        if (&other == this) {
             return *this;
         }
         _config_map = other._config_map;
         return *this;
     }
+    static ConfigMgr& Instance() {
+        static ConfigMgr configMgr;
+        return configMgr;
+    }
 private:
+    ConfigMgr();
     // 存储section和key-value的映射
     std::map<std::string, SectionInfo> _config_map;
 };

@@ -15,7 +15,6 @@ private:
     // 接收对端的连接，因此需要和底层的事件循环进行绑定，借助io_context进行绑定
     tcp::acceptor _acceptor;
     net::io_context& _ioc;
-    tcp::socket _socket;
 };
 
 

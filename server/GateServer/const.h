@@ -10,11 +10,6 @@
 #include <boost/beast.hpp>
 #include <memory>
 #include <iostream>
-#include <map>
-#include <json/json.h>
-#include <json/value.h>
-#include <json/reader.h>
-
 
 namespace beast = boost::beast; // from <boost/beast.hpp>
 namespace http = beast::http; // from <boost/beast/http.hpp>
@@ -26,8 +21,5 @@ enum ErrorCodes {
     Error_json = 1001, // json解析错误
     RPCFailed = 1002, // rpc调用失败
 };
-
-class ConfigMgr;
-extern ConfigMgr gCfgMgr;
 
 #endif //SERVER_CONST_H
