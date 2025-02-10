@@ -86,3 +86,4 @@ CMakeLists.txt.user*
 
 .idea/
 node_modules/
+*.code-workspace
