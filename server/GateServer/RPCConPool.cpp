@@ -6,7 +6,7 @@
 
 RPCConPool::RPCConPool(std::size_t pool_size, const std::string &host,
                        const std::string &port)
-    : _pool_size(pool_size), _host(host), _port(port), _b_stop(false) {
+    : _b_stop(false) , _pool_size(pool_size), _host(host), _port(port) {
   if (pool_size == 0) {
     throw std::invalid_argument("pool_size must be greater than 0");
   }

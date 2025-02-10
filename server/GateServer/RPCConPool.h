@@ -38,8 +38,8 @@ public:
 private:
   std::atomic_bool _b_stop;
   std::size_t _pool_size;
-  std::string _port;
   std::string _host;
+  std::string _port;
   std::queue<std::unique_ptr<VerifyService::Stub>> _connections;
   std::mutex _mutex;
   std::condition_variable _cv;

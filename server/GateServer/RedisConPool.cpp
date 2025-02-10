@@ -7,9 +7,9 @@
 
 RedisConPool::RedisConPool(std::size_t pool_size, const std::string &host,
                            int port, const char *password)
-    : _pool_size(pool_size), _host(host), _port(port), _b_stop(false) {
+    : _b_stop(false) , _pool_size(pool_size), _host(host), _port(port) {
   for (size_t i = 0; i < _pool_size; ++i) {
-    auto connection = redisConnect(host.c_str(), port);
+    auto connection = redisConnect(_host.c_str(), _port);
     if (connection == nullptr || connection->err != 0) {
       if (connection != nullptr) {
         redisFree(connection);
