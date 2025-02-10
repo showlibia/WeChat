@@ -82,6 +82,7 @@ CMakeLists.txt.user*
 .uic/
 **/build*/
 **/cmake-build-*/
+**/.cache/
 
 .idea/
 node_modules/
