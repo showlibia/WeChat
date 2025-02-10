@@ -38,7 +38,11 @@ add_executable(server
         AsioIOContextPool.h
         AsioIOContextPool.cpp
         RedisMgr.h
-        RedisMgr.cpp)
+        RedisMgr.cpp
+        RedisConPool.h
+        RedisConPool.cpp
+        RPCConPool.cpp
+        RPCConPool.h)
 
 target_include_directories(server PRIVATE ${HIREDIS_INCLUDE_DIRS})
 target_link_libraries(server PRIVATE ${JSONCPP_LIBRARIES} gRPC::grpc++ protobuf::libprotobuf ${HIREDIS_LIBRARIES})

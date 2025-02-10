@@ -3,13 +3,10 @@
 //
 
 #include "CServer.h"
-#include "const.h"
 #include "ConfigMgr.h"
-#include "hiredis.h"
 #include "RedisMgr.h"
 
 void TestRedisMgr() {
-    assert(RedisMgr::GetInstance()->Connect("127.0.0.1", 6380));
     assert(RedisMgr::GetInstance()->Auth("123456"));
     assert(RedisMgr::GetInstance()->Set("blogwebsite","llfc.club"));
     std::string value="";
@@ -28,7 +25,6 @@ void TestRedisMgr() {
     assert(RedisMgr::GetInstance()->RPop("lpushkey1", value));
     assert(RedisMgr::GetInstance()->LPop("lpushkey1", value));
     assert(RedisMgr::GetInstance()->LPop("lpushkey2", value)==false);
-    RedisMgr::GetInstance()->Close();
 }
 
 int main() {

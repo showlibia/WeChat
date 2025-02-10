@@ -9,7 +9,6 @@
 #include "const.h"
 #include <vector>
 
-
 class AsioIOContextPool : public Singleton<AsioIOContextPool>{
     friend class Singleton<AsioIOContextPool>;
 public:

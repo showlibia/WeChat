@@ -6,7 +6,16 @@
 #define SERVER_REDISMGR_H
 
 #include "Singleton.h"
-#include "hiredis.h"
+#include "RedisConPool.h"
+
+// 自定义删除器，用于自动释放 redisReply 对象
+struct RedisReplyDeleter {
+  void operator()(redisReply *reply) const {
+    if (reply)
+      freeReplyObject(reply);
+  }
+};
+using RedisReplyPtr = std::unique_ptr<redisReply, RedisReplyDeleter>;
 
 class RedisMgr : public Singleton<RedisMgr>, public std::enable_shared_from_this<RedisMgr> {
     friend class Singleton<RedisMgr>;
@@ -14,7 +23,6 @@ class RedisMgr : public Singleton<RedisMgr>, public std::enable_shared_from_this
 public:
     ~RedisMgr();
 
-    bool Connect(const std::string &host, int port);
     bool Get(const std::string &key, std::string &value);
     bool Set(const std::string &key, const std::string &value);
     bool Auth(const std::string &password);
@@ -31,8 +39,7 @@ public:
 private:
     RedisMgr();
 
-    redisContext* _connection;
-    redisReply* _reply;
+    std::unique_ptr<RedisConPool> _pool;
 };
 
 
