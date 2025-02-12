@@ -20,6 +20,8 @@ set(OutputDir "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}")
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Network)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Network)
 
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
 set(PROJECT_SOURCES
         main.cpp
         mainwindow.cpp
@@ -27,6 +29,13 @@ set(PROJECT_SOURCES
         mainwindow.ui
         httpmgr.cpp
         httpmgr.h
+        logindialog.h logindialog.cpp logindialog.ui
+        rc.qrc
+        registerdialog.h registerdialog.cpp registerdialog.ui
+        global.h global.cpp
+        singleton.h
+        config.ini
+        timerbtn.h timerbtn.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -34,12 +43,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         ${app_icon_resource}
-        logindialog.h logindialog.cpp logindialog.ui
-        rc.qrc
-        registerdialog.h registerdialog.cpp registerdialog.ui
-        global.h global.cpp
-        singleton.h
-        config.ini
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET WeChat APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

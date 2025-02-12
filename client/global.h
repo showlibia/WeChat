@@ -12,6 +12,7 @@
 #include <QDir>
 
 extern QString gate_url_prefix;
+extern QString md5Encrypt(const QString& password);
 
 /**
  * @brief repolish 用来刷新qss
@@ -31,6 +32,16 @@ enum ErrorCodes {
     SUCCESS = 0,
     ERR_JSON = 1, // json解析错误
     ERR_NETWORK = 2, // 网络错误
+};
+
+enum TipErr{
+    TIP_SUCCESS = 0,
+    TIP_EMAIL_ERR = 1,
+    TIP_PWD_ERR = 2,
+    TIP_CONFIRM_ERR = 3,
+    TIP_PWD_CONFIRM = 4,
+    TIP_VARIFY_ERR = 5,
+    TIP_USER_ERR = 6
 };
 
 #endif // GLOBAL_H
