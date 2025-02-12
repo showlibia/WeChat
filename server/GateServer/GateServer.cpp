@@ -4,6 +4,7 @@
 
 #include "CServer.h"
 #include "ConfigMgr.h"
+#include <iostream>
 
 int main() {
     ConfigMgr& gCfgMgr = ConfigMgr::Instance();

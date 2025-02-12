@@ -35,12 +35,6 @@ RedisConPool::RedisConPool(std::size_t pool_size, const std::string &host,
   }
 }
 
-void RedisConPool::WaitForConnectionsToReturn() {
-  std::unique_lock<std::mutex> lock(_mutex);
-  // 等待所有在用连接归还
-  _cv.wait(lock, [this] { return _in_use.load() == 0; });
-}
-
 void RedisConPool::Close() {
   {
     std::lock_guard<std::mutex> lock(_mutex);
@@ -48,7 +42,6 @@ void RedisConPool::Close() {
   }
   _cv.notify_all();
   // 等待所有连接归还
-  WaitForConnectionsToReturn();
 }
 
 RedisConPool::~RedisConPool() {
@@ -76,12 +69,10 @@ std::shared_ptr<redisContext> RedisConPool::GetConnection() {
 
   auto connection = std::move(_connections.front());
   _connections.pop();
-  ++_in_use;
 
   return std::shared_ptr<redisContext>(
       connection.release(), [this](redisContext *ptr) {
         std::unique_lock<std::mutex> lock(_mutex);
-        --_in_use;
         if (_b_stop) {
           lock.unlock();
           redisFree(ptr);

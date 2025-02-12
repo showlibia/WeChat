@@ -13,7 +13,7 @@ class AsioIOContextPool : public Singleton<AsioIOContextPool>{
     friend class Singleton<AsioIOContextPool>;
 public:
     using IOContext = net::io_context;
-    using Work = net::io_context::work;
+    using Work = net::executor_work_guard<net::io_context::executor_type>;
     using WorkPtr = std::unique_ptr<Work>;
     ~AsioIOContextPool();
     AsioIOContextPool(const AsioIOContextPool&) = delete;

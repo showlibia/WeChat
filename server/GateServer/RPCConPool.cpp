@@ -21,7 +21,6 @@ RPCConPool::~RPCConPool() {
   std::cout << __FUNCTION__ << std::endl;
   Close();
   std::unique_lock<std::mutex> lock(_mutex);
-  _cv.wait(lock, [this]() { return _connections.size() == _pool_size; });
   while (!_connections.empty()) {
     _connections.pop();
   }
@@ -40,7 +39,6 @@ std::shared_ptr<VerifyService::Stub> RPCConPool::GetConnection() {
   }
   auto connection = std::move(_connections.front());
   _connections.pop();
-  ++_active_connections;
 
   // 自定义删除器，当shared_ptr的引用计数为0时，自动归还连接
   return std::shared_ptr<VerifyService::Stub>(
@@ -53,7 +51,6 @@ std::shared_ptr<VerifyService::Stub> RPCConPool::GetConnection() {
           if (!_b_stop) {
             _connections.push(std::move(conn));
           }
-          --_active_connections;
         }
         // 通知等待线程（既可能是
         // GetConnection，也可能是析构函数等待所有连接归还）

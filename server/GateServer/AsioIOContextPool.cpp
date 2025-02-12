@@ -10,7 +10,7 @@ AsioIOContextPool::AsioIOContextPool(std::size_t size)
     for(std::size_t i = 0; i < size; ++i)
     {
         // 绑定每个io_context到work, 防止io_context退出
-        _works[i] = std::make_unique<Work>(_ioContexts[i]);
+        _works[i] = std::make_unique<Work>(_ioContexts[i].get_executor());
     }
 
     for(std::size_t i = 0; i < size; ++i)
@@ -38,8 +38,7 @@ AsioIOContextPool::~AsioIOContextPool() {
 void AsioIOContextPool::Stop() {
     // 仅仅work.reset()是不够的，因为io_context可能在等待事件
     // 当iocontext已经绑定读写事件后，需要调用stop来停止io_context
-    for(auto &work: _works) {
-        work->get_io_context().stop();
+    for (auto &work : _works) {
         work.reset();
     }
 

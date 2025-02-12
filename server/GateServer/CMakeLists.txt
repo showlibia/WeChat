@@ -17,6 +17,9 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 set(JSONCPP_INCLUDE_DIRS /usr/include/json)
 set(JSONCPP_LIBRARIES /usr/lib/libjsoncpp.so)
 
+set(MARIADBCPP_INCLUDE_DIRS /usr/include/mariadb)
+set(MARIADBCPP_LIBRARIES /usr/lib/libmariadbcpp.so)
+
 find_package(Protobuf CONFIG REQUIRED)
 find_package(gRPC CONFIG REQUIRED)
 
@@ -48,6 +51,9 @@ set(SOURCES
     RedisMgr.cpp
     RedisConPool.cpp
     RPCConPool.cpp
+    MysqlPool.cpp
+    MysqlDao.cpp
+    MysqlMgr.cpp
     ${GENERATED_SRC}
 )
 set(HEADERS
@@ -62,6 +68,9 @@ set(HEADERS
     RedisMgr.h
     RedisConPool.h
     RPCConPool.h
+    MysqlPool.h
+    MysqlDao.h
+    MysqlMgr.h
     ${GENERATED_HDR}
 )
 
@@ -81,4 +90,5 @@ target_link_libraries(server PRIVATE
     gRPC::grpc++
     protobuf::libprotobuf
     ${HIREDIS_LIBRARIES}
+    ${MARIADBCPP_LIBRARIES}
 )

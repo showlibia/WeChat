@@ -28,12 +28,6 @@ private:
   std::queue<std::unique_ptr<redisContext>> _connections;
   std::mutex _mutex;
   std::condition_variable _cv;
-
-  // 追踪正在使用的连接数量
-  std::atomic<size_t> _in_use{0};
-
-  // 辅助函数：等待所有连接归还
-  void WaitForConnectionsToReturn();
 };
 
 

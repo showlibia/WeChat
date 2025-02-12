@@ -43,8 +43,6 @@ private:
   std::queue<std::unique_ptr<VerifyService::Stub>> _connections;
   std::mutex _mutex;
   std::condition_variable _cv;
-  // 记录正在使用（未归还）的连接数量
-  std::size_t _active_connections;
 };
 
 #endif //SERVER_RPCCONPOOL_H
