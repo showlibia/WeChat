@@ -4,8 +4,8 @@
         "pass": "DZv9atbfzs4jSzDs"
     },
     "mysql": {
-        "host": "81.68.86.146",
-        "port": 3306
+        "host": "127.0.0.1",
+        "port": 3308
     },
     "redis": {
         "host": "127.0.0.1",
