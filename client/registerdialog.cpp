@@ -4,6 +4,7 @@
 #include "global.h"
 #include <QMouseEvent>
 #include <QStyleOptionFrame>
+#include <QMessageBox>
 
 RegisterDialog::RegisterDialog(QWidget *parent)
     : QDialog(parent)
@@ -11,18 +12,10 @@ RegisterDialog::RegisterDialog(QWidget *parent)
 {
     ui->setupUi(this);
 
-    pass_action = createPasswordAction(ui->pass_edit);
-    confirm_action = createPasswordAction(ui->confirm_edit);
+    ui->pass_edit->setEchoMode(QLineEdit::Password);
+    ui->confirm_edit->setEchoMode(QLineEdit::Password);
 
-    connect(pass_action, &QAction::triggered, this, [this]() {
-        togglePasswordVisibility(ui->pass_edit, pass_action);
-    });
-
-    connect(confirm_action, &QAction::triggered, this, [this]() {
-        togglePasswordVisibility(ui->confirm_edit, confirm_action);
-    });
-
-    setupHoverEffects();
+    _click_visible = new ClickVisible(this, ui->pass_edit, ui->confirm_edit);
 
     ui->err_tip->setProperty("state", "normal");
     repolish(ui->err_tip);
@@ -57,15 +50,15 @@ RegisterDialog::~RegisterDialog()
 
 void RegisterDialog::on_get_code_clicked()
 {
-    auto email = ui->email_edit->text();
-    QJsonObject json_obj;
-    json_obj["email"] = email;
-    HttpMgr::GetInstance()->PostHttpReq(
-        QUrl(gate_url_prefix + "/get_verifycode"),
-        json_obj,
-        ReqId::ID_GET_VERIFY_CODE,
-        Modules::REGESTERMOD
-        );
+  if (checkEmailValid()) {
+      ui->get_code->startTimer();
+      auto email = ui->email_edit->text();
+      QJsonObject json_obj;
+      json_obj["email"] = email;
+      HttpMgr::GetInstance()->PostHttpReq(
+          QUrl(gate_url_prefix + "/get_verifycode"), json_obj,
+          ReqId::ID_GET_VERIFY_CODE, Modules::REGESTERMOD);
+    }
 }
 
 void RegisterDialog::showTip(QString str, bool b_ok)
@@ -212,103 +205,6 @@ void RegisterDialog::DelTipErr(TipErr te)
     }
 
     showTip(_tip_errs.first(), false);
-}
-
-QAction *RegisterDialog::createPasswordAction(QLineEdit *edit)
-{
-    QAction *action = new QAction(edit);
-    action->setIcon(QIcon(hiddenIcons.normal));
-    edit->addAction(action, QLineEdit::TrailingPosition);
-    action->setProperty("isHidden", true);
-    return action;
-}
-
-void RegisterDialog::setupHoverEffects()
-{
-    ui->pass_edit->installEventFilter(this);
-    ui->confirm_edit->installEventFilter(this);
-
-    // 设置鼠标跟踪
-    ui->pass_edit->setMouseTracking(true);
-    ui->confirm_edit->setMouseTracking(true);
-}
-
-void RegisterDialog::togglePasswordVisibility(QLineEdit *edit, QAction *action)
-{
-    bool isHidden = (edit->echoMode() == QLineEdit::Password);
-
-    // 切换密码可见性
-    edit->setEchoMode(isHidden ? QLineEdit::Normal : QLineEdit::Password);
-    action->setProperty("isHidden", !isHidden);
-
-    // 更新图标状态
-    const IconPaths &icons = isHidden ? visibleIcons : hiddenIcons;
-    action->setIcon(QIcon(icons.normal));
-}
-
-bool RegisterDialog::eventFilter(QObject *obj, QEvent *event)
-{
-    if (obj == ui->pass_edit || obj == ui->confirm_edit) {
-        QLineEdit *edit = qobject_cast<QLineEdit*>(obj);
-        QAction *action = (edit == ui->pass_edit) ? pass_action : confirm_action;
-
-        switch (event->type()) {
-        case QEvent::MouseMove:
-        case QEvent::HoverMove: {
-            QMouseEvent *me = static_cast<QMouseEvent*>(event);
-            checkHoverState(edit, action, me->pos());
-            break;
-        }
-        case QEvent::Leave:
-            resetIconState(edit, action);
-            edit->unsetCursor();
-            break;
-        default:
-            break;
-        }
-    }
-    return QWidget::eventFilter(obj, event);
-}
-
-void RegisterDialog::checkHoverState(QLineEdit *edit, QAction *action, const QPoint &pos)
-{
-    // 获取动作按钮的位置区域
-    QStyleOptionFrame option;
-
-    // 手动设置样式选项字段（比如矩形区域，状态等）
-    option.rect = edit->rect();  // 控件的区域
-    option.state = QStyle::State_Enabled | QStyle::State_Active;  // 设置控件的状态
-
-    // 获取 QLineEdit 的样式
-    QStyle *style = edit->style();
-
-    // 获取 QLineEdit 内容区域的矩形（模拟 initStyleOption 的功能）
-    QRect rect = style->subElementRect(QStyle::SE_LineEditContents, &option, edit);
-
-    // 计算动作图标区域（右侧20x20区域）
-    const int iconSize = 20;
-    QRect actionRect(rect.right() - iconSize, rect.top(), iconSize, iconSize);
-
-    if (actionRect.contains(pos)) {
-        edit->setCursor(Qt::PointingHandCursor);
-        updateHoverIcon(action, true);
-    } else {
-        edit->unsetCursor();
-        updateHoverIcon(action, false);
-    }
-}
-
-void RegisterDialog::updateHoverIcon(QAction *action, bool hover)
-{
-    bool isHidden = action->property("isHidden").toBool();
-    const IconPaths &icons = isHidden ? hiddenIcons : visibleIcons;
-    action->setIcon(QIcon(hover ? icons.hover : icons.normal));
-}
-
-void RegisterDialog::resetIconState(QLineEdit *edit, QAction *action)
-{
-    bool isHidden = action->property("isHidden").toBool();
-    action->setIcon(QIcon(isHidden ? hiddenIcons.normal : visibleIcons.normal));
 }
 
 void RegisterDialog::on_confirm_button_clicked()

@@ -27,13 +27,23 @@ void TimerBtn::mouseReleaseEvent(QMouseEvent *e)
 {
     if(e->button() == Qt::LeftButton)
     {
-        qDebug() << "MyButton was released!";
-        this->setEnabled(false);
-        this->setText(QString::number(_counter));
-        _timer->start(1000);
+        // 先发送点击信号，让外部处理邮箱验证
         emit clicked();
+        
+        // 不在这里直接开始计时，移除以下代码
+        // this->setEnabled(false);
+        // this->setText(QString::number(_counter));
+        // _timer->start(1000);
     }
 
-    // 调用基类的mouseReleaseEvent以确保正常的事件处理（如点击效果）
+    // 调用基类的mouseReleaseEvent以确保正常的事件处理
     QPushButton::mouseReleaseEvent(e);
+}
+
+// 添加一个新的公共方法来启动计时器
+void TimerBtn::startTimer()
+{
+    this->setEnabled(false);
+    this->setText(QString::number(_counter));
+    _timer->start(1000);
 }

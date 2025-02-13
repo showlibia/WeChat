@@ -12,6 +12,7 @@ public:
     ~TimerBtn();
 
     void mouseReleaseEvent(QMouseEvent *e) override;
+    void startTimer();
 private:
     QTimer* _timer;
     int _counter;

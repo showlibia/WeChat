@@ -7,7 +7,7 @@
 #include <iostream>
 #include <mutex>
 #include <memory>
-#include "QStyle"
+#include <QStyle>
 #include <QSettings>
 #include <QDir>
 
