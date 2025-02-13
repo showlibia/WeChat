@@ -8,6 +8,7 @@ set(CMAKE_AUTORCC ON)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_PREFIX_PATH E:/Qt/Qt/6.8.1/mingw_64)
 
 set(app_icon_resource "${CMAKE_CURRENT_SOURCE_DIR}/icon.rc")
 
@@ -34,8 +35,10 @@ set(PROJECT_SOURCES
         registerdialog.h registerdialog.cpp registerdialog.ui
         global.h global.cpp
         singleton.h
-        config.ini
         timerbtn.h timerbtn.cpp
+        clickvisible.h clickvisible.cpp
+        clicklabel.h clicklabel.cpp
+        resetdialog.h resetdialog.cpp resetdialog.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -43,7 +46,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         ${app_icon_resource}
-        clickvisible.h clickvisible.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET WeChat APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

@@ -8,7 +8,7 @@
 
 RegisterDialog::RegisterDialog(QWidget *parent)
     : QDialog(parent)
-    , ui(new Ui::RegisterDialog)
+    , ui(new Ui::RegisterDialog), _countdown(5)
 {
     ui->setupUi(this);
 
@@ -41,6 +41,19 @@ RegisterDialog::RegisterDialog(QWidget *parent)
     connect(ui->verify_edit, &QLineEdit::editingFinished, this, [this](){
         checkVerifyValid();
     });
+
+    _countedown_timer = new QTimer();
+    connect(_countedown_timer, &QTimer::timeout, [this](){
+        if(_countdown == 0) {
+            _countedown_timer->stop();
+            emit sigSwitchLogin();
+            return;
+        }
+
+        _countdown--;
+        auto str = QString("注册成功，%1 s后返回登录").arg(_countdown);
+        ui->tip_label->setText(str);
+    });
 }
 
 RegisterDialog::~RegisterDialog()
@@ -57,7 +70,7 @@ void RegisterDialog::on_get_code_clicked()
       json_obj["email"] = email;
       HttpMgr::GetInstance()->PostHttpReq(
           QUrl(gate_url_prefix + "/get_verifycode"), json_obj,
-          ReqId::ID_GET_VERIFY_CODE, Modules::REGESTERMOD);
+          ReqId::ID_GET_VERIFY_CODE, Modules::REGISTERMOD);
     }
 }
 
@@ -118,6 +131,7 @@ void RegisterDialog::initHttpHandlers() {
         auto email = json["email"].toString();
         showTip(tr("用户注册成功"), true);
         qDebug() << "email is " << email;
+        ChangeTipPage();
     });
 }
 
@@ -207,6 +221,15 @@ void RegisterDialog::DelTipErr(TipErr te)
     showTip(_tip_errs.first(), false);
 }
 
+void RegisterDialog::ChangeTipPage()
+{
+    _countedown_timer->stop();
+    ui->stackedWidget->setCurrentWidget(ui->page_2);
+
+    // 启动定时器，设置间隔为1000毫秒（1秒）
+    _countedown_timer->start(1000);
+}
+
 void RegisterDialog::on_confirm_button_clicked()
 {
     bool valid = checkUserValid();
@@ -233,6 +256,20 @@ void RegisterDialog::on_confirm_button_clicked()
     json_obj["confirm"] = ui->confirm_edit->text();
     json_obj["verifycode"] = ui->verify_edit->text();
     HttpMgr::GetInstance()->PostHttpReq(QUrl(gate_url_prefix+"/user_register"),
-                                        json_obj, ReqId::ID_REG_USER,Modules::REGESTERMOD);
+                                        json_obj, ReqId::ID_REG_USER,Modules::REGISTERMOD);
+}
+
+
+void RegisterDialog::on_return_btn_clicked()
+{
+    _countedown_timer->stop();
+    emit sigSwitchLogin();
+}
+
+
+void RegisterDialog::on_cancel_button_clicked()
+{
+    _countedown_timer->stop();
+    emit sigSwitchLogin();
 }
 

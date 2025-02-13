@@ -6,14 +6,19 @@
 ClickVisible::ClickVisible(QWidget *parent, QLineEdit* pass_edit, QLineEdit* confirm_edit)
     : QWidget(parent), _pass_edit(pass_edit), _confirm_edit(confirm_edit) {
     _pass_action = createPasswordAction(pass_edit);
-    _confirm_action = createPasswordAction(confirm_edit);
+    if (_confirm_edit) {
+        _confirm_action = createPasswordAction(_confirm_edit);
+        connect(_confirm_action, &QAction::triggered, this, [this]() {
+            if (_confirm_edit && _confirm_action) {
+                togglePasswordVisibility(_confirm_edit, _confirm_action);
+            }
+        });
+    } else {
+        _confirm_action = nullptr;
+    }
 
     connect(_pass_action, &QAction::triggered, this, [this]() {
         togglePasswordVisibility(_pass_edit, _pass_action);
-    });
-
-    connect(_confirm_action, &QAction::triggered, this, [this]() {
-        togglePasswordVisibility(_confirm_edit, _confirm_action);
     });
 
     setupHoverEffects();
@@ -21,6 +26,9 @@ ClickVisible::ClickVisible(QWidget *parent, QLineEdit* pass_edit, QLineEdit* con
 
 QAction *ClickVisible::createPasswordAction(QLineEdit *edit)
 {
+    if (!edit) {
+        return nullptr;
+    }
     QAction *action = new QAction(edit);
     action->setIcon(QIcon(hiddenIcons.normal));
     edit->addAction(action, QLineEdit::TrailingPosition);
@@ -31,15 +39,18 @@ QAction *ClickVisible::createPasswordAction(QLineEdit *edit)
 void ClickVisible::setupHoverEffects()
 {
     _pass_edit->installEventFilter(this);
-    _confirm_edit->installEventFilter(this);
+    if (_confirm_edit)
+        _confirm_edit->installEventFilter(this);
 
     // 设置鼠标跟踪
     _pass_edit->setMouseTracking(true);
-    _confirm_edit->setMouseTracking(true);
+    if (_confirm_edit)
+        _confirm_edit->setMouseTracking(true);
 }
 
 void ClickVisible::togglePasswordVisibility(QLineEdit *edit, QAction *action)
 {
+    if (!edit || !action) return;
     bool isHidden = (edit->echoMode() == QLineEdit::Password);
 
     // 切换密码可见性
@@ -53,7 +64,7 @@ void ClickVisible::togglePasswordVisibility(QLineEdit *edit, QAction *action)
 
 bool ClickVisible::eventFilter(QObject *obj, QEvent *event)
 {
-    if (obj == _pass_edit || obj == _confirm_edit) {
+    if (obj == _pass_edit || (_confirm_edit && obj == _confirm_edit)) {
         QLineEdit *edit = qobject_cast<QLineEdit*>(obj);
         QAction *action = (edit == _pass_edit) ? _pass_action : _confirm_action;
 
@@ -77,6 +88,7 @@ bool ClickVisible::eventFilter(QObject *obj, QEvent *event)
 
 void ClickVisible::checkHoverState(QLineEdit *edit, QAction *action, const QPoint &pos)
 {
+    if (!edit || !action) return;
     // 获取动作按钮的位置区域
     QStyleOptionFrame option;
 
@@ -115,6 +127,7 @@ void ClickVisible::checkHoverState(QLineEdit *edit, QAction *action, const QPoin
 
 void ClickVisible::updateHoverIcon(QAction *action, bool hover)
 {
+    if (!action) return;
     bool isHidden = action->property("isHidden").toBool();
     const IconPaths &icons = isHidden ? hiddenIcons : visibleIcons;
     action->setIcon(QIcon(hover ? icons.hover : icons.normal));
@@ -122,6 +135,7 @@ void ClickVisible::updateHoverIcon(QAction *action, bool hover)
 
 void ClickVisible::resetIconState(QLineEdit *edit, QAction *action)
 {
+    if (!action) return;
     bool isHidden = action->property("isHidden").toBool();
     action->setIcon(QIcon(isHidden ? hiddenIcons.normal : visibleIcons.normal));
 }
