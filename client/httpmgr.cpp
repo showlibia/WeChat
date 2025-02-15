@@ -18,7 +18,7 @@ void HttpMgr::PostHttpReq(QUrl url, QJsonObject json, ReqId req_id, Modules mod)
     // 设置信号和槽等待发送完成;
     QObject::connect(reply, &QNetworkReply::finished, [self, reply, req_id, mod]() {
         if (reply->error() != QNetworkReply::NoError) {
-            qDebug() << reply->errorString();
+            qDebug() << "HttpMgr::PostHttpReq: " << reply->errorString();
             // 发送信号完成
             emit self->sig_http_finish(req_id, "", ErrorCodes::ERR_NETWORK, mod);
             reply->deleteLater();
@@ -53,5 +53,9 @@ void HttpMgr::slot_http_finish(ReqId id, QString res, ErrorCodes err, Modules mo
 
     if(mod == Modules::RESETMOD) {
         emit sig_reset_mod_finish(id, res, err);
+    }
+
+    if(mod == Modules::LOGINMOD) {
+        emit sig_login_mod_finish(id, res, err);
     }
 }

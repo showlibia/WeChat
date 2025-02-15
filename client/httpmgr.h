@@ -29,8 +29,10 @@ signals:
     void sig_http_finish(ReqId id, QString res, ErrorCodes err, Modules mod);
     //注册模块http相关请求完成发送此信号
     void sig_reg_mod_finish(ReqId id, QString res, ErrorCodes err);
-    // 重置密码模块
+    // 重置密码模块信号
     void sig_reset_mod_finish(ReqId id, QString res, ErrorCodes err);
+    // 登录模块信号
+    void sig_login_mod_finish(ReqId id, QString res, ErrorCodes err);
 };
 
 
