@@ -29,49 +29,55 @@ pkg_check_modules(HIREDIS REQUIRED hiredis)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.ini ${CMAKE_BINARY_DIR}/config.ini COPYONLY)
 
 set(GENERATED_SRC
-    ${CMAKE_CURRENT_SOURCE_DIR}/message.pb.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/message.grpc.pb.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/proto/message.pb.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/proto/message.grpc.pb.cc
 )
 set(GENERATED_HDR
-    ${CMAKE_CURRENT_SOURCE_DIR}/message.pb.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/message.grpc.pb.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/proto/message.pb.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/proto/message.grpc.pb.h
 )
 foreach(file ${GENERATED_SRC} ${GENERATED_HDR})
     set_source_files_properties(${file} PROPERTIES GENERATED TRUE)
 endforeach()
 
+set(HEADERS
+    inc/AsioIOContextPool.h
+    inc/ConfigMgr.h
+    inc/const.h
+    inc/CServer.h
+    inc/HttpConnection.h
+    inc/LogicSystem.h
+    inc/MysqlDao.h
+    inc/MysqlMgr.h
+    inc/MysqlPool.h
+    inc/RedisConPool.h
+    inc/RedisMgr.h
+    inc/RPCConPool.h
+    inc/Singleton.h
+    inc/VerifyGrpcClient.h
+    ${GENERATED_HDR}
+)
+
 set(SOURCES
-    CServer.cpp
-    HttpConnection.cpp
-    GateServer.cpp
-    LogicSystem.cpp
-    VerifyGrpcClient.cpp
-    ConfigMgr.cpp
-    AsioIOContextPool.cpp
-    RedisMgr.cpp
-    RedisConPool.cpp
-    RPCConPool.cpp
-    MysqlPool.cpp
-    MysqlDao.cpp
-    MysqlMgr.cpp
+    src/AsioIOContextPool.cpp
+    src/ConfigMgr.cpp
+    src/CServer.cpp
+    src/GateServer.cpp
+    src/HttpConnection.cpp
+    src/LogicSystem.cpp
+    src/MysqlDao.cpp
+    src/MysqlMgr.cpp
+    src/MysqlPool.cpp
+    src/RedisConPool.cpp
+    src/RedisMgr.cpp
+    src/RPCConPool.cpp
+    src/VerifyGrpcClient.cpp
     ${GENERATED_SRC}
 )
-set(HEADERS
-    CServer.h
-    const.h
-    HttpConnection.h
-    Singleton.h
-    LogicSystem.h
-    VerifyGrpcClient.h
-    ConfigMgr.h
-    AsioIOContextPool.h
-    RedisMgr.h
-    RedisConPool.h
-    RPCConPool.h
-    MysqlPool.h
-    MysqlDao.h
-    MysqlMgr.h
-    ${GENERATED_HDR}
+
+include_directories(
+    ${CMAKE_CURRENT_SOURCE_DIR}/inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/proto
 )
 
 add_executable(server
