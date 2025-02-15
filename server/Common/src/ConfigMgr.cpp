@@ -26,14 +26,14 @@ ConfigMgr::ConfigMgr() {
         _config_map[section_name] = sectionInfo;
     }
 
-    for(const auto& section_entry: _config_map) {
-        const std::string & section_name = section_entry.first;
-        const SectionInfo & section_info = section_entry.second;
-        std::cout << "[" << section_name << "]" << std::endl;
-        for(const auto& data_entry: section_info._section_datas) {
-            const std::string & key = data_entry.first;
-            const std::string & value = data_entry.second;
-            std::cout << key << "=" << value << std::endl;
-        }
-    }
+    // for(const auto& section_entry: _config_map) {
+    //     const std::string & section_name = section_entry.first;
+    //     const SectionInfo & section_info = section_entry.second;
+    //     std::cout << "[" << section_name << "]" << std::endl;
+    //     for(const auto& data_entry: section_info._section_datas) {
+    //         const std::string & key = data_entry.first;
+    //         const std::string & value = data_entry.second;
+    //         std::cout << key << "=" << value << std::endl;
+    //     }
+    // }
 }

@@ -23,5 +23,5 @@ VerifyGrpcClient::VerifyGrpcClient() {
   auto &gCfgMgr = ConfigMgr::Instance();
   std::string host = gCfgMgr["VerifyServer"]["host"];
   std::string port = gCfgMgr["VerifyServer"]["port"];
-  _rpc_pool.reset(new RPCConPool(5, host, port));
+  _rpc_pool.reset(new RPCConPool<VerifyService>(5, host, port));
 }

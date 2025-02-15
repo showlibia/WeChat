@@ -20,7 +20,7 @@ public:
     GetVerifyRsp GetVerifyCode(const std::string & email);
 private:
     VerifyGrpcClient();
-    std::unique_ptr<RPCConPool> _rpc_pool;
+    std::unique_ptr<RPCConPool<VerifyService>> _rpc_pool;
 };
 
 
