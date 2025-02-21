@@ -1,6 +1,7 @@
 #include "tcpmgr.h"
 #include <QJsonDocument>
 #include <QJsonObject>
+#include "usermgr.h"
 
 TcpMgr::~TcpMgr()
 {
