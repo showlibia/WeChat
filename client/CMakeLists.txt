@@ -48,6 +48,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${app_icon_resource}
         tcpmgr.h tcpmgr.cpp
         usermgr.h usermgr.cpp
+        chatdialog.h chatdialog.cpp chatdialog.ui
+        clickedbtn.h clickedbtn.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET WeChat APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

@@ -6,20 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
+    <width>16</width>
+    <height>58</height>
    </rect>
   </property>
   <property name="windowTitle">
+   <string/>
   </property>
   <widget class="QWidget" name="centralwidget"/>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
  <connections/>
