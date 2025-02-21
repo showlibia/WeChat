@@ -55,4 +55,11 @@ enum ClickLbState{
     Selected = 1
 };
 
+struct ServerInfo{
+    QString Host;
+    QString Port;
+    QString Token;
+    int Uid;
+};
+
 #endif // GLOBAL_H

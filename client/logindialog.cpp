@@ -5,6 +5,7 @@
 #include <QPainter>
 #include <QJsonObject>
 #include <httpmgr.h>
+#include "tcpmgr.h"
 
 LoginDialog::LoginDialog(QWidget *parent)
     : QDialog(parent)
@@ -26,6 +27,12 @@ LoginDialog::LoginDialog(QWidget *parent)
 
     connect(ui->forget_label, &ClickLabel::clicked, this, &LoginDialog::slot_forget_pwd);
     connect(HttpMgr::GetInstance().get(), &HttpMgr::sig_login_mod_finish, this, &LoginDialog::slot_login_mod_finish);
+    // 连接tcp连接请求的信号和槽函数
+    connect(this, &LoginDialog::sig_connect_tcp, TcpMgr::GetInstance().get(), &TcpMgr::slot_tcp_connect);
+    // 连接tcpmgr发出的连接成功信号
+    connect(TcpMgr::GetInstance().get(), &TcpMgr::sig_con_success, this, &LoginDialog::slot_tcp_con_finish);
+    // 连接tcpmgr发出的登录失败信号
+    connect(TcpMgr::GetInstance().get(), &TcpMgr::sig_login_failed, this, &LoginDialog::slot_login_failed);
 }
 
 LoginDialog::~LoginDialog()
@@ -68,11 +75,23 @@ void LoginDialog::initHttpHandlers()
         int err = json["error"].toInt();
         if (err != ErrorCodes::SUCCESS) {
             showTip(tr("参数错误"), false);
+            enableBtn(true);
             return;
         }
         auto email = json["email"].toString();
         showTip(tr("登录成功"), true);
-        qDebug() << "[LOGIN] email is " << email;
+
+        ServerInfo si;
+        si.Uid = json["uid"].toInt();
+        si.Host = json["host"].toString();
+        si.Port = json["port"].toString();
+        si.Token = json["token"].toString();
+
+        _uid = si.Uid;
+        _token = si.Token;
+        qDebug()<< "[LOGIN] email is " << email << " uid is " << si.Uid <<" host is "
+                 << si.Host << " Port is " << si.Port << " Token is " << si.Token;
+        emit sig_connect_tcp(si);
     });
 }
 
@@ -137,6 +156,13 @@ void LoginDialog::showTip(QString str, bool b_ok)
     repolish(ui->err_tip);
 }
 
+bool LoginDialog::enableBtn(bool enabled)
+{
+    ui->login_btn->setEnabled(enabled);
+    ui->register_button->setEnabled(enabled);
+    return true;
+}
+
 void LoginDialog::slot_forget_pwd()
 {
     emit switchReset();
@@ -151,7 +177,7 @@ void LoginDialog::on_login_btn_clicked()
     if(!checkPassValid()) {
         return;
     }
-
+    enableBtn(false);
     QJsonObject json_obj;
 
     json_obj["email"] = ui->email_edit->text();
@@ -182,5 +208,32 @@ void LoginDialog::slot_login_mod_finish(ReqId id, QString res, ErrorCodes err)
 
     _handlers[id](jsonObj);
     return;
+}
+
+void LoginDialog::slot_tcp_con_finish(bool bsuccess)
+{
+    if(bsuccess) {
+        showTip(tr("聊天服务连接成功，正在登录..."),true);
+        QJsonObject jsonObj;
+        jsonObj["uid"] = _uid;
+        jsonObj["token"] = _token;
+
+        QJsonDocument doc(jsonObj);
+        QString jsonString = doc.toJson(QJsonDocument::Indented);
+
+        TcpMgr::GetInstance()->sig_send_data(ReqId::ID_CHAT_LOGIN, jsonString);
+
+    } else {
+        showTip(tr("网络异常"),false);
+        enableBtn(true);
+    }
+}
+
+void LoginDialog::slot_login_failed(int err)
+{
+    QString result = QString("登录失败，err is %1").arg(err);
+
+    showTip(result, false);
+    enableBtn(true);
 }
 
