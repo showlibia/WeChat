@@ -50,6 +50,7 @@ set(HEADERS
     inc/RedisMgr.h
     inc/RPCConPool.h
     inc/Singleton.h
+    inc/StatusGrpcClient.h
     ${GENERATED_HDR}
 )
 
@@ -61,6 +62,7 @@ set(SOURCES
     src/MysqlPool.cpp
     src/RedisConPool.cpp
     src/RedisMgr.cpp
+    src/StatusGrpcClient.cpp
     ${GENERATED_SRC}
 )
 

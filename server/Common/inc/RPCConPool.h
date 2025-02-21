@@ -6,6 +6,7 @@
 #define SERVER_RPCCONPOOL_H
 
 #include "message.grpc.pb.h"
+#include "message.pb.h"
 #include <atomic>
 #include <condition_variable>
 #include <grpcpp/grpcpp.h>
@@ -18,6 +19,8 @@ using grpc::Status;
 
 using message::GetChatServerReq;
 using message::GetChatServerRsp;
+using message::LoginReq;
+using message::LoginRsp;
 using message::GetVerifyReq;
 using message::GetVerifyRsp;
 using message::StatusService;

@@ -21,3 +21,20 @@ StatusGrpcClient::StatusGrpcClient() {
   std::string port = gCfgMgr["StatusServer"]["port"];
   _pool.reset(new RPCConPool<StatusService>(5, host, port));
 }
+
+LoginRsp StatusGrpcClient::Login(int uid, std::string token) {
+  ClientContext context;
+  LoginRsp reply;
+  LoginReq request;
+  request.set_uid(uid);
+  request.set_token(token);
+
+  auto stub = _pool->GetConnection();
+  Status status = stub->Login(&context, request, &reply);
+  if (status.ok()) {
+    return reply;
+  } else {
+    reply.set_error(ErrorCodes::RPCFailed);
+    return reply;
+  }
+}
