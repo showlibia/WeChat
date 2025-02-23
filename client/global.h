@@ -62,4 +62,47 @@ struct ServerInfo{
     int Uid;
 };
 
+enum ChatUIMode{
+    SearchMode, //搜索模式
+    ChatMode, //聊天模式
+    ContactMode, //联系模式
+};
+
+//自定义QListWidgetItem的几种类型
+enum ListItemType{
+    CHAT_USER_ITEM, //聊天用户
+    CONTACT_USER_ITEM, //联系人用户
+    SEARCH_USER_ITEM, //搜索到的用户
+    ADD_USER_TIP_ITEM, //提示添加用户
+    INVALID_ITEM,  //不可点击条目
+    GROUP_TIP_ITEM, //分组提示条目
+    LINE_ITEM,  //分割线
+    APPLY_FRIEND_ITEM, //好友申请
+};
+
+const std::vector<QString>  strs ={"hello world !",
+                                   "nice to meet u",
+                                   "New year，new life",
+                                   "You have to love yourself",
+                                   "My love is written in the wind ever since the whole world is you"};
+
+const std::vector<QString> heads = {
+    ":/res/head_1.jpg",
+    ":/res/head_2.jpg",
+    ":/res/head_3.jpg",
+    ":/res/head_4.jpg",
+    ":/res/head_5.jpg"
+};
+
+const std::vector<QString> names = {
+    "HanMeiMei",
+    "Lily",
+    "Ben",
+    "Androw",
+    "Max",
+    "Summer",
+    "Candy",
+    "Hunter"
+};
+
 #endif // GLOBAL_H
