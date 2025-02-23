@@ -54,6 +54,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         chatuserlist.h chatuserlist.cpp
         chatuserwid.h chatuserwid.cpp chatuserwid.ui
         listitembase.h listitembase.cpp
+        loadingdlg.h loadingdlg.cpp loadingdlg.ui
+        chatpage.h chatpage.cpp chatpage.ui
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET WeChat APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

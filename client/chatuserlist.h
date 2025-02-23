@@ -10,6 +10,8 @@ public:
     ChatUserList(QWidget* parent = nullptr);
 protected:
     bool eventFilter(QObject *object, QEvent *event) override;
+private slots:
+    void checkScrollEnd();
 signals:
     void sig_loading_chat_user();
 };

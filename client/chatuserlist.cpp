@@ -8,6 +8,9 @@ ChatUserList::ChatUserList(QWidget *parent) : QListWidget(parent)
     this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     this->viewport()->installEventFilter(this);
+
+    connect(verticalScrollBar(), &QScrollBar::valueChanged,
+            this, &ChatUserList::checkScrollEnd);
 }
 
 bool ChatUserList::eventFilter(QObject *object, QEvent *event)
@@ -21,25 +24,16 @@ bool ChatUserList::eventFilter(QObject *object, QEvent *event)
         }
     }
 
-    // 当鼠标为滚轮事件
-    if(object == this->viewport() && event->type() == QEvent::Wheel) {
-        QWheelEvent *wheelEvent = static_cast<QWheelEvent*>(event);
-        int numDegrees = wheelEvent->angleDelta().y() / 8;
-        int numSteps = numDegrees / 10; // 计算滚动步数
-        // 设置滚动幅度
-        this->verticalScrollBar()->setValue(this->verticalScrollBar()->value() - numSteps);
-        // 检查是否滚动到底部
-        QScrollBar *scrollBar = this->verticalScrollBar();
-        int maxScrollValue = scrollBar->maximum();
-        int currentValue = scrollBar->value();
-        //int pageSize = 10; // 每页加载的联系人数量
-        if (maxScrollValue - currentValue <= 0) {
-            // 滚动到底部，加载新的联系人
-            qDebug()<<"load more chat user";
-            //发送信号通知聊天界面加载更多聊天内容
-            emit sig_loading_chat_user();
-        }
-        return true; // 停止事件传递
-    }
+
     return QListWidget::eventFilter(object, event);
 }
+
+void ChatUserList::checkScrollEnd()
+{
+    QScrollBar* scrollBar = verticalScrollBar();
+    if (scrollBar->value() == scrollBar->maximum()) {
+        qDebug() << "Scrolled to bottom, loading more...";
+        emit sig_loading_chat_user();
+    }
+}
+

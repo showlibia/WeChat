@@ -17,8 +17,11 @@ public:
     ~ChatDialog();
     void ShowSearch(bool search);
     void addChatUserList();
+private slots:
+    void slot_loading_chat_user();
 private:
     Ui::ChatDialog *ui;
+    bool _b_loading;
     ChatUIMode _state;
     ChatUIMode _mode;
 };
