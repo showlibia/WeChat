@@ -24,7 +24,6 @@ bool ChatUserList::eventFilter(QObject *object, QEvent *event)
         }
     }
 
-
     return QListWidget::eventFilter(object, event);
 }
 

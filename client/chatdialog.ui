@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>744</width>
-    <height>669</height>
+    <width>645</width>
+    <height>497</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -90,8 +90,8 @@
           <widget class="QLabel" name="side_head_lb">
            <property name="minimumSize">
             <size>
-             <width>30</width>
-             <height>30</height>
+             <width>35</width>
+             <height>35</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -109,7 +109,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLabel" name="side_chat_lb">
+          <widget class="StateWidget" name="side_chat_lb" native="true">
            <property name="minimumSize">
             <size>
              <width>30</width>
@@ -121,17 +121,11 @@
              <width>30</width>
              <height>30</height>
             </size>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignCenter</set>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QLabel" name="side_contact_lb">
+          <widget class="StateWidget" name="side_contact_lb" native="true">
            <property name="minimumSize">
             <size>
              <width>30</width>
@@ -143,12 +137,6 @@
              <width>30</width>
              <height>30</height>
             </size>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignCenter</set>
            </property>
           </widget>
          </item>
@@ -255,10 +243,10 @@
        <widget class="ChatUserList" name="chat_user_list"/>
       </item>
       <item>
-       <widget class="QListWidget" name="contact_list"/>
+       <widget class="ContactUsertList" name="contact_list"/>
       </item>
       <item>
-       <widget class="QListWidget" name="search_list"/>
+       <widget class="SearchList" name="search_list"/>
       </item>
      </layout>
     </widget>
@@ -266,10 +254,10 @@
    <item>
     <widget class="QStackedWidget" name="stackedWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="ChatPage" name="chat_page"/>
-     <widget class="QWidget" name="friend_apply_page"/>
+     <widget class="ApplyFriendPage" name="friend_apply_page"/>
     </widget>
    </item>
   </layout>
@@ -294,6 +282,28 @@
    <class>ChatPage</class>
    <extends>QWidget</extends>
    <header>chatpage.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>StateWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">statewidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>SearchList</class>
+   <extends>QListWidget</extends>
+   <header location="global">searchlist.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ContactUsertList</class>
+   <extends>QListWidget</extends>
+   <header location="global">contactusetlist.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ApplyFriendPage</class>
+   <extends>QWidget</extends>
+   <header location="global">applyfriendpage.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -25,6 +25,8 @@ public:
                   const QString& select_press = "");
 
     ClickLbState getState();
+    bool SetCurState(ClickLbState state);
+    void ResetNormalState();
 signals:
     void clicked(QString, ClickLbState);
 private:

@@ -26,6 +26,8 @@ enum ReqId {
     ID_LOGIN_USER = 1004, //用户登录
     ID_CHAT_LOGIN = 1005, //登陆聊天服务器
     ID_CHAT_LOGIN_RSP= 1006, //登陆聊天服务器回包
+    ID_SEARCH_USER_REQ = 1007, //用户搜索请求
+    ID_SEARCH_USER_RSP = 1008, //搜索用户回包
 };
 
 enum Modules {
@@ -80,6 +82,23 @@ enum ListItemType{
     APPLY_FRIEND_ITEM, //好友申请
 };
 
+enum class ChatRole
+{
+    Self,
+    Other
+};
+
+struct MsgInfo{
+    QString msgFlag;//"text,image,file"
+    QString content;//表示文件和图像的url,文本信息
+    QPixmap pixmap;//文件和图片的缩略图
+};
+
+//申请好友标签输入框最低长度
+const int MIN_APPLY_LABEL_ED_LEN = 40;
+const int  tip_offset = 5;
+const QString add_prefix = "添加标签 ";
+
 const std::vector<QString>  strs ={"hello world !",
                                    "nice to meet u",
                                    "New year，new life",
@@ -104,5 +123,7 @@ const std::vector<QString> names = {
     "Candy",
     "Hunter"
 };
+
+const int CHAT_COUNT_PER_PAGE = 13;
 
 #endif // GLOBAL_H
