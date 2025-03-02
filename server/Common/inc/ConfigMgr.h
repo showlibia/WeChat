@@ -40,7 +40,6 @@ struct SectionInfo {
 
 class ConfigMgr {
 public:
-
     ~ConfigMgr() {
         _config_map.clear();
     }
@@ -64,8 +63,15 @@ public:
         static ConfigMgr configMgr;
         return configMgr;
     }
+
+    void LoadConfig(const std::filesystem::path & config_path);
 private:
-    ConfigMgr();
+  ConfigMgr() {
+    std::filesystem::path current_path = std::filesystem::current_path();
+    std::filesystem::path config_path = current_path / "config.ini";
+    LoadConfig(config_path);
+  }
+
     // 存储section和key-value的映射
     std::map<std::string, SectionInfo> _config_map;
 };

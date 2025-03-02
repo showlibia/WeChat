@@ -11,6 +11,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 message(STATUS "当前构建类型: ${CMAKE_BUILD_TYPE}")
+add_compile_options(-fclang-abi-compat=17)
 
 set(JSONCPP_INCLUDE_DIRS /usr/include/json)
 set(JSONCPP_LIBRARIES /usr/lib/libjsoncpp.so)
