@@ -107,10 +107,10 @@ void SearchList::slot_item_clicked(QListWidgetItem *item)
         jsonObj["uid"] = uid_str;
 
         QJsonDocument doc(jsonObj);
-        QString jsonString = doc.toJson(QJsonDocument::Indented);
+        QByteArray jsonData = doc.toJson(QJsonDocument::Compact);
 
         //发送tcp请求给chat server
-        emit TcpMgr::GetInstance()->sig_send_data(ReqId::ID_SEARCH_USER_REQ, jsonString);
+        emit TcpMgr::GetInstance()->sig_send_data(ReqId::ID_SEARCH_USER_REQ, jsonData);
         return;
     }
 
