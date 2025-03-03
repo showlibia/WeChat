@@ -52,6 +52,7 @@ set(HEADERS
     inc/RPCConPool.h
     inc/Singleton.h
     inc/StatusGrpcClient.h
+    inc/data.h
     ${GENERATED_HDR}
 )
 

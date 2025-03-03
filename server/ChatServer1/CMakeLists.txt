@@ -17,11 +17,16 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../Common ${CMAKE_CURRENT_BINARY_DIR}/CommonLib)
 
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/self.ini ${CMAKE_BINARY_DIR}/self.ini COPYONLY)
+
 set(HEADERS
     inc/CServer.h
     inc/LogicSystem.h
     inc/CSession.h
     inc/MsgNode.h
+    inc/ChatGrpcClient.h
+    inc/ChatServiceImpl.h
+    inc/UserMgr.h
 )
 
 set(SOURCES
@@ -30,6 +35,9 @@ set(SOURCES
     src/ChatServer.cpp
     src/CSession.cpp
     src/MsgNode.cpp
+    src/ChatGrpcClient.cpp
+    src/ChatServiceImpl.cpp
+    src/UserMgr.cpp
 )
 
 include_directories(

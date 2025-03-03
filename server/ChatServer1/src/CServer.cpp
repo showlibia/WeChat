@@ -1,5 +1,6 @@
 #include "CServer.h"
 #include "AsioIOContextPool.h"
+#include "UserMgr.h"
 #include <boost/asio/io_context.hpp>
 #include <iostream>
 #include <memory>
@@ -18,7 +19,7 @@ void CServer ::HandleAccept(std::shared_ptr<CSession> session,
   if (!ec) {
     session->Start();
     std::lock_guard<std::mutex> lock(_mutex);
-    _sessions.insert(std::make_pair(session->GetUuid(), session));
+    _sessions.insert(std::make_pair(session->GetSessionId(), session));
   } else {
     std::cerr << "Error: " << ec.what() << std::endl;
   }
@@ -33,7 +34,13 @@ void CServer::StartAccept() {
                                    std::placeholders::_1));
 }
 
-void CServer::ClearSession(std::string uuid) {
+void CServer::ClearSession(std::string session_id) {
+  if (_sessions.find(session_id)!= _sessions.end()) {
+    UserMgr::GetInstance()->RmvUserSession(_sessions[session_id]->GetUserId());
+  }
+
+  {
     std::lock_guard<std::mutex> lock(_mutex);
-    _sessions.erase(uuid);
+    _sessions.erase(session_id);
+    }
 }

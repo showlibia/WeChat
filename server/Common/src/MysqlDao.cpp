@@ -119,7 +119,7 @@ bool MysqlDao::CheckPwd(const std::string &email, const std::string &password, U
         return false;
       }
       user_info.name = res->getString("name");
-      user_info.password = res->getString("pwd");
+      user_info.pwd = res->getString("pwd");
       user_info.email = res->getString("email");
       user_info.uid = res->getInt("uid");
       return true;
@@ -149,7 +149,7 @@ std::shared_ptr<UserInfo> MysqlDao::GetUser(int uid) {
     if (res->next()) {
       auto user_info = std::make_shared<UserInfo>();
       user_info->name = res->getString("name");
-      user_info->password = res->getString("pwd");
+      user_info->pwd = res->getString("pwd");
       user_info->email = res->getString("email");
       user_info->uid = res->getInt("uid");
       return user_info;

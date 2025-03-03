@@ -3,13 +3,7 @@
 
 #include "MysqlPool.h"
 #include <memory>
-
-struct UserInfo {
-  std::string name;
-  std::string password;
-  std::string email;
-  int uid;
-};
+#include "data.h"
 
 class MysqlDao {
 public:
