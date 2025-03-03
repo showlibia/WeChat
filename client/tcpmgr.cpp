@@ -26,18 +26,19 @@ TcpMgr::TcpMgr(): _host(""), _port(0), _b_recv_pending(false), _message_id(0), _
             // 解析头部
             if(!_b_recv_pending) {
                 // 检查在缓冲区是否能读出一个消息头（id + len)
-                if(_buffer.size() < sizeof(quint16)* 2) {
-                    return; // 数据不足，等待数据
+                if (_buffer.size() < static_cast<int>(sizeof(quint16) * 2)) {
+                    return; // 数据不够，等待更多数据
                 }
 
                 stream >> _message_id >> _message_length;
 
                 _buffer = _buffer.mid(sizeof(quint16)*2);
 
-                qDebug() << "Message Id: " << _message_id << "length: " << _message_length;
+                qDebug() << "Message ID:" << _message_id << ", Length:" << _message_length;
             }
 
             if(_buffer.size() < _message_length) {
+                qDebug() << "Reading message's buffer is not enough";
                 _b_recv_pending = true;
                 return;
             }
@@ -45,6 +46,7 @@ TcpMgr::TcpMgr(): _host(""), _port(0), _b_recv_pending(false), _message_id(0), _
             _b_recv_pending = false;
 
             QByteArray messageBody = _buffer.mid(0, _message_length);
+            qDebug() << "receive body msg is " << messageBody ;
 
             _buffer = _buffer.mid(_message_length);
             handleMsg(ReqId(_message_id), _message_length, messageBody);
@@ -153,23 +155,29 @@ void TcpMgr::slot_tcp_connect(ServerInfo si)
     _socket.connectToHost(_host, _port);
 }
 
-void TcpMgr::slot_send_data(ReqId reqId, QString data)
+void TcpMgr::slot_send_data(ReqId reqId, QByteArray dataBytes)
 {
     uint16_t id = reqId;
 
-    QByteArray dataByte = data.toUtf8();
+    // 计算长度（使用网络字节序转换）
+    quint16 len = static_cast<quint16>(dataBytes.length());
 
-    quint16 len = data.size();
-
-    // 创建用于存储要发送数据的
+    // 创建一个QByteArray用于存储要发送的所有数据
     QByteArray block;
     QDataStream out(&block, QIODevice::WriteOnly);
 
-    // 网络字节序
+    // 设置数据流使用网络字节序
     out.setByteOrder(QDataStream::BigEndian);
 
+    // 写入ID和长度
     out << id << len;
-    block.append(dataByte);
 
+    qDebug() << "Sending message - ID:" << id << "Length:" << len;
+
+    // 添加字符串数据
+    block.append(dataBytes);
+
+    // 发送数据
     _socket.write(block);
+    qDebug() << "tcp mgr send byte data is " << block ;
 }
