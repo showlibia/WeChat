@@ -83,6 +83,8 @@ CMakeLists.txt.user*
 **/build*/
 **/cmake-build-*/
 **/.cache/
+**/.vscode/
+*.log
 
 .idea/
 node_modules/
