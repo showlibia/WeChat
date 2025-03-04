@@ -3,6 +3,7 @@
 //
 
 #include "RedisConPool.h"
+#include "Logger.h"
 #include <iostream>
 
 RedisConPool::RedisConPool(std::size_t pool_size, const std::string &host,
@@ -18,19 +19,19 @@ RedisConPool::RedisConPool(std::size_t pool_size, const std::string &host,
     }
     auto reply = (redisReply *)redisCommand(connection, "AUTH %s", password);
     if (reply == nullptr) {
-      std::cerr << "认证命令执行失败: 无返回" << std::endl;
+      LOG(warning) << "认证命令执行失败: 无返回" << std::endl;
       redisFree(connection);
       continue;
     }
     if (reply->type == REDIS_REPLY_ERROR) {
-      std::cerr << "认证失败: " << reply->str << std::endl;
+      LOG(warning) << "认证失败: " << reply->str << std::endl;
       freeReplyObject(reply);
       redisFree(connection);
       continue;
     }
 
     freeReplyObject(reply);
-    std::cout << "认证成功" << std::endl;
+    LOG(info) << "认证成功" << std::endl;
     _connections.push(std::unique_ptr<redisContext>(connection));
   }
 }
@@ -45,7 +46,7 @@ void RedisConPool::Close() {
 }
 
 RedisConPool::~RedisConPool() {
-  std::cout << __FUNCTION__ << std::endl;
+  LOG(info) << std::endl;
   Close();
   std::lock_guard<std::mutex> lock(_mutex);
   while (!_connections.empty()) {

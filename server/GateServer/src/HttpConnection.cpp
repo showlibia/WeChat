@@ -4,6 +4,8 @@
 
 #include "HttpConnection.h"
 #include "LogicSystem.h"
+#include "Logger.h"
+#include <boost/log/trivial.hpp>
 
 HttpConnection::HttpConnection(net::io_context& ioc)
     : _socket(ioc)
@@ -14,7 +16,7 @@ void HttpConnection::Start() {
     http::async_read(_socket, _buffer, _request, [self](beast::error_code ec, std::size_t bytes_transferred){
         try {
             if (ec) {
-                std::cout << "http read err is " << ec.what() << std::endl;
+                LOG(info) << "http read err is " << ec.what() << std::endl;
                 return ;
             }
 
@@ -23,7 +25,7 @@ void HttpConnection::Start() {
             self->HandleReq();
             self->CheckDeadline();
         } catch (std::exception& e) {
-            std::cout << "Error: " << e.what() << std::endl;
+            LOG(warning) << "Error: " << e.what() << std::endl;
         }
     });
 }

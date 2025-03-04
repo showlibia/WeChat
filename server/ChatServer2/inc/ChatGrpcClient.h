@@ -2,10 +2,10 @@
 #define SERVER_CHATGRPCCLIENT_H
 
 #include "ConfigMgr.h"
+#include "RPCConPool.h"
 #include "Singleton.h"
 #include "const.h"
 #include "data.h"
-#include "RPCConPool.h"
 #include "message.grpc.pb.h"
 #include "message.pb.h"
 #include <grpcpp/grpcpp.h>
@@ -37,7 +37,7 @@ class ChatGrpcClient : public Singleton<ChatGrpcClient> {
   friend class Singleton<ChatGrpcClient>;
 
 public:
-  ~ChatGrpcClient();
+  ~ChatGrpcClient() {}
   AddFriendRsp NotifyAddFriend(std::string ip, const AddFriendReq &req);
   AuthFriendRsp NotifyAuthFriend(std::string server_ip,
                                  const AuthFriendReq &req);
@@ -49,7 +49,8 @@ public:
 
 private:
   ChatGrpcClient();
-  std::unordered_map<std::string, std::unique_ptr<RPCConPool<ChatService>>> _pools;
+  std::unordered_map<std::string, std::unique_ptr<RPCConPool<ChatService>>>
+      _pools;
 };
 
 #endif // SERVER_CHATGRPCCLIENT_H

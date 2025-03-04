@@ -1,6 +1,8 @@
 #include "UserMgr.h"
 #include "CServer.h"
+#include <iostream>
 #include <memory>
+#include "Logger.h"
 #include <mutex>
 
 UserMgr::UserMgr() {
@@ -22,6 +24,8 @@ std::shared_ptr<CSession> UserMgr::GetSession(int uid) {
 
 void UserMgr::SetUserSession(int uid, std::shared_ptr<CSession> session) {
   std::lock_guard<std::mutex> lock(_session_mtx);
+  LOG(info) << "uid is " << uid << "session id is " << session->GetSessionId()
+            << std::endl;
   _uid_to_session[uid] = session;
 }
 

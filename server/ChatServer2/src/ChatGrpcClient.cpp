@@ -1,7 +1,7 @@
 #include "ChatGrpcClient.h"
+#include "MysqlPool.h"
 #include <boost/algorithm/string.hpp>
 #include <memory>
-#include <type_traits>
 #include <vector>
 
 ChatGrpcClient::ChatGrpcClient() {
@@ -25,6 +25,26 @@ ChatGrpcClient::ChatGrpcClient() {
 AddFriendRsp ChatGrpcClient::NotifyAddFriend(std::string server_ip,
                                              const AddFriendReq &req) {
   AddFriendRsp rsp;
+  Defer defer([&rsp, &req]() {
+    rsp.set_error(ErrorCodes::Success);
+    rsp.set_applyuid(req.applyuid());
+    rsp.set_touid(req.touid());
+  });
+
+  auto find_iter = _pools.find(server_ip);
+  if (find_iter == _pools.end()) {
+    return rsp;
+  }
+
+  auto &pool = find_iter->second;
+  ClientContext context;
+  auto stub = pool->GetConnection();
+  Status status = stub->NotifyAddFriend(&context, req, &rsp);
+
+  if (!status.ok()) {
+    rsp.set_error(ErrorCodes::RPCFailed);
+    return rsp;
+  }
   return rsp;
 }
 

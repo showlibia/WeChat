@@ -2,6 +2,7 @@
 #include "AsioIOContextPool.h"
 #include "UserMgr.h"
 #include <boost/asio/io_context.hpp>
+#include "Logger.h"
 #include <iostream>
 #include <memory>
 #include <mutex>
@@ -21,7 +22,7 @@ void CServer ::HandleAccept(std::shared_ptr<CSession> session,
     std::lock_guard<std::mutex> lock(_mutex);
     _sessions.insert(std::make_pair(session->GetSessionId(), session));
   } else {
-    std::cerr << "Error: " << ec.what() << std::endl;
+    LOG(warning) << "Error: " << ec.what() << std::endl;
   }
   StartAccept();
 }

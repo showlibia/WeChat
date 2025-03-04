@@ -1,5 +1,6 @@
 #include "StatusServiceImpl.h"
 #include "ConfigMgr.h"
+#include "Logger.h"
 #include "RedisMgr.h"
 #include "const.h"
 #include <algorithm>
@@ -33,7 +34,7 @@ StatusServiceImpl::StatusServiceImpl() {
       continue;
     }
 
-    std::cout << __FUNCTION__ << " server name: " << word << std::endl;
+    LOG(info) << " server name: " << word << std::endl;
     ChatServer server;
     server.host = cfg[word]["host"];
     server.port = cfg[word]["port"];
@@ -99,7 +100,7 @@ ChatServer StatusServiceImpl::getChatServer() {
 
     auto count_str =
         RedisMgr::GetInstance()->HGet(LOGIN_COUNT, server.second.name);
-    std::cout << __FUNCTION__ << "server name : " << server.second.name
+    LOG(info) << "server name : " << server.second.name
               << " count : " << count_str << std::endl;
     if (count_str.empty()) {
       server.second.con_count = INT_MAX;

@@ -3,6 +3,8 @@
 //
 
 #include "AsioIOContextPool.h"
+#include "Logger.h"
+#include <boost/log/trivial.hpp>
 
 AsioIOContextPool::AsioIOContextPool(std::size_t size)
     : _ioContexts(size), _works(size), _nextIOContext(0)
@@ -32,7 +34,7 @@ net::io_context &AsioIOContextPool::GetIOContext() {
 
 AsioIOContextPool::~AsioIOContextPool() {
     Stop();
-    std::cout << __FUNCTION__ << std::endl;
+    LOG(info) << std::endl;
 }
 
 void AsioIOContextPool::Stop() {

@@ -4,9 +4,11 @@
 
 #include "CServer.h"
 #include "ConfigMgr.h"
+#include "Logger.h"
 #include <iostream>
 
 int main() {
+    Logger::Init("../../GateServer.log");
     ConfigMgr& gCfgMgr = ConfigMgr::Instance();
     std::string gate_port_str = gCfgMgr["GateServer"]["port"];
     unsigned short gate_port = std::stoi(gate_port_str);
@@ -21,10 +23,10 @@ int main() {
             ioc.stop();
         });
         std::make_shared<CServer>(ioc, port)->Start();
-        std::cout << "GateServer start on port: " << port << std::endl;
+        LOG(info) << "GateServer start on port: " << port << std::endl;
         ioc.run();
     } catch (std::exception & e) {
-        std::cerr << "Error: " << e.what() << std::endl;
-        return EXIT_FAILURE;
+      LOG(warning) << "Error: " << e.what() << std::endl;
+      return EXIT_FAILURE;
     }
 }

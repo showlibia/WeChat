@@ -5,6 +5,7 @@
 #include <mariadb/conncpp/Exception.hpp>
 #include <mariadb/conncpp/Statement.hpp>
 #include <memory>
+#include "Logger.h"
 #include <mutex>
 #include <thread>
 #include <utility>
@@ -37,7 +38,7 @@ MysqlPool::MysqlPool(const std::string &url, const std::string &user,
       _check_thread.detach();
     }
   } catch (sql::SQLException &e) {
-    std::cerr << "mysql pool init failed: " << e.what() << std::endl;
+    LOG(warning) << "mysql pool init failed: " << e.what() << std::endl;
   }
 }
 
@@ -63,7 +64,7 @@ void MysqlPool::checkConnection() {
       stmt->execute("SELECT 1");
       connection->_last_oper_time = timestamp;
     } catch (sql::SQLException &e) {
-      std::cerr << "Error keep connection alive: " << e.what() << std::endl;
+      LOG(warning) << "Error keep connection alive: " << e.what() << std::endl;
       // 创建新连接并替换旧连接
       sql::Driver *driver = sql::mariadb::get_driver_instance();
       auto new_connection = driver->connect(_url, _user, _password);
@@ -103,7 +104,7 @@ std::shared_ptr<SqlConnection> MysqlPool::GetConnection() {
 }
 
 MysqlPool::~MysqlPool() {
-  std::cout << __FUNCTION__ << std::endl;
+  LOG(info) << __FUNCTION__ << std::endl;
   Close();
   std::lock_guard<std::mutex> lock(_mutex);
   while (!_pool.empty()) {

@@ -3,7 +3,9 @@
 #include "ChatServiceImpl.h"
 #include "ConfigMgr.h"
 #include "RedisMgr.h"
+#include "Logger.h"
 #include "const.h"
+#include <boost/log/trivial.hpp>
 #include <csignal>
 #include <grpcpp/security/server_credentials.h>
 #include <grpcpp/server_builder.h>
@@ -16,6 +18,7 @@ std::condition_variable cond_quit;
 std::mutex mutex_quit;
 
 int main() {
+  Logger::Init("../../ChatServer1.log"); // 初始化日志系统
   try {
     auto &cfg = ConfigMgr::Instance();
     cfg.LoadConfig("self.ini");
@@ -32,7 +35,7 @@ int main() {
 
     // 构建并启动gRPC服务器
     std::unique_ptr<grpc::Server> server(builder.BuildAndStart());
-    std::cout << "RPC Server listening on " << server_address << std::endl;
+    LOG(info) << "RPC Server listening on " << server_address << std::endl;
 
     // 单独启动一个线程处理grpc服务
     std::thread grpc_server_thread([&server] {
@@ -53,6 +56,6 @@ int main() {
     RedisMgr::GetInstance()->HDel(LOGIN_COUNT, server_name);
     grpc_server_thread.join();
   } catch (std::exception &e) {
-    std::cerr << "Exception: " << e.what() << std::endl;
+    LOG(warning) << "Exception: " << e.what() << std::endl;
   }
 }

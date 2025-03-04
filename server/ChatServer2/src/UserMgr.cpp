@@ -1,27 +1,28 @@
 #include "UserMgr.h"
 #include "CServer.h"
+#include "Logger.h"
+#include <iostream>
 #include <memory>
 #include <mutex>
 
-UserMgr::UserMgr() {
-}
+UserMgr::UserMgr() {}
 
-UserMgr::~UserMgr() {
-  _uid_to_session.clear();
-}
+UserMgr::~UserMgr() { _uid_to_session.clear(); }
 
 std::shared_ptr<CSession> UserMgr::GetSession(int uid) {
   std::lock_guard<std::mutex> lock(_session_mtx);
   auto it = _uid_to_session.find(uid);
-    if (it != _uid_to_session.end()) {
-        return it->second;
-    }
+  if (it != _uid_to_session.end()) {
+    return it->second;
+  }
 
-    return nullptr; 
+  return nullptr;
 }
 
 void UserMgr::SetUserSession(int uid, std::shared_ptr<CSession> session) {
   std::lock_guard<std::mutex> lock(_session_mtx);
+  LOG(info) << "uid is " << uid << "session id is " << session->GetSessionId()
+            << std::endl;
   _uid_to_session[uid] = session;
 }
 

@@ -3,6 +3,7 @@
 //
 
 #include "CServer.h"
+#include "Logger.h"
 #include "HttpConnection.h"
 #include "AsioIOContextPool.h"
 
@@ -25,8 +26,8 @@ void CServer::Start() {
             connection->Start();
             self->Start();
         } catch (std::exception& e) {
-            std::cout << "Error: " << e.what() << std::endl;
-            self->Start();
+          LOG(warning) << "Error: " << e.what() << std::endl;
+          self->Start();
         }
     });
 }

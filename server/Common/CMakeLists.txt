@@ -19,11 +19,15 @@ set(JSONCPP_LIBRARIES /usr/lib/libjsoncpp.so)
 set(MARIADBCPP_INCLUDE_DIRS /usr/include/mariadb)
 set(MARIADBCPP_LIBRARIES /usr/lib/libmariadbcpp.so)
 
+cmake_policy(SET CMP0074 NEW)
+
 find_package(Protobuf CONFIG REQUIRED)
 find_package(gRPC CONFIG REQUIRED)
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(HIREDIS REQUIRED hiredis)
+
+find_package(Boost REQUIRED COMPONENTS log_setup log)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.ini ${CMAKE_BINARY_DIR}/config.ini COPYONLY)
 
@@ -53,6 +57,7 @@ set(HEADERS
     inc/Singleton.h
     inc/StatusGrpcClient.h
     inc/data.h
+    inc/Logger.h
     ${GENERATED_HDR}
 )
 
@@ -82,12 +87,15 @@ target_include_directories(CommonLib PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/inc
     ${CMAKE_CURRENT_SOURCE_DIR}/proto
+    ${Boost_INCLUDE_DIRS}
 )
 
 target_link_libraries(CommonLib PUBLIC
     ${JSONCPP_LIBRARIES}
     gRPC::grpc++
     protobuf::libprotobuf
+    Boost::log_setup
+    Boost::log
     ${HIREDIS_LIBRARIES}
     ${MARIADBCPP_LIBRARIES}
 )
