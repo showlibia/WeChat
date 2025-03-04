@@ -18,7 +18,7 @@ std::condition_variable cond_quit;
 std::mutex mutex_quit;
 
 int main() {
-  Logger::Init("../../ChatServer1.log"); // 初始化日志系统
+  Logger::Init("./ChatServer1.log"); // 初始化日志系统
   try {
     auto &cfg = ConfigMgr::Instance();
     cfg.LoadConfig("self.ini");

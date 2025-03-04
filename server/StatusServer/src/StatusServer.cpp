@@ -38,7 +38,7 @@ void RunServer() {
 }
 
 int main(int argc, char **argv) {
-  Logger::Init("../../StatusServer.log");
+  Logger::Init("./StatusServer.log");
   try {
     RunServer();
   } catch (std::exception const &e) {

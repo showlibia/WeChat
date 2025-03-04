@@ -12,6 +12,7 @@
 #include <boost/log/utility/setup/console.hpp>
 #include <boost/log/utility/setup/file.hpp>
 #include <filesystem>
+#include <fstream>
 #include <string>
 
 namespace logging = boost::log;
@@ -40,26 +41,45 @@ public:
     if (!log_file.empty()) {
       std::filesystem::path path(log_file);
       if (!std::filesystem::exists(path.parent_path())) {
-        std::cerr << "[ERROR] ["<< __FILE__ << " : " << __FUNCTION__ << " : " << __LINE__ << " : " << "Log directory does not exist: " << path.parent_path()
+        std::cerr << "[INFO] [" << __FILE__ << ":" << __FUNCTION__ << ":"
+                << __LINE__ << "] " << "Log directory does not exist: " << path.parent_path()
                   << std::endl;
         std::filesystem::create_directories(path.parent_path());
-        std::cout << "[INFO] [" << __FILE__ << " : " << __FUNCTION__ << " : "
-                << __LINE__ << " : " << "Created log directory: " << path.parent_path()
+        std::cout << "[INFO] [" << __FILE__ << ":" << __FUNCTION__ << ":"
+                  << __LINE__ << "] "
+                  << "Created log directory: " << path.parent_path()
                   << std::endl;
       }
+
+      // 检查文件是否可写
+      std::ofstream test_file(log_file, std::ios::app);
+      if (!test_file) {
+        std::cerr << "[ERROR] [" << __FILE__ << ":" << __FUNCTION__ << ":"
+                  << __LINE__ << "] "
+                  << "Cannot write to log file: " << log_file << std::endl;
+        return;
+      }
+      test_file.close();
+
       // 输出到文件
       std::filesystem::path abs_path = std::filesystem::absolute(path);
 
       std::cout << "[INFO] [" << __FILE__ << ":" << __FUNCTION__ << ":"
-                << __LINE__ << "]" << "Logging to file: " << abs_path.string() << std::endl;
+                << __LINE__ << "] " << "Logging to file: " << abs_path.string()
+                << std::endl;
+      logging::core::get()->set_filter(
+          logging::trivial::severity >=
+          logging::trivial::info // 记录 info 及以上级别的日志
+      );
       logging::add_file_log(keywords::file_name = log_file,
                             keywords::open_mode = std::ios::app,
                             keywords::rotation_size = 10 * 1024 * 1024, // 10MB
-                            keywords::format = format);
+                            keywords::format = format,
+                             keywords::auto_flush = true);
     } else {
       // 输出到控制台
-      std::cout << "[INFO] [" << __FILE__ << " : " << __FUNCTION__ << " : "
-                << __LINE__ << " : " << "Log to console" << std::endl;
+      std::cout << "[INFO] [" << __FILE__ << ":" << __FUNCTION__ << ":"
+                << __LINE__ << "] " << "Log to console" << std::endl;
       logging::add_console_log(std::cout, keywords::format = format);
     }
   }

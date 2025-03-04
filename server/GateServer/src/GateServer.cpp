@@ -8,7 +8,7 @@
 #include <iostream>
 
 int main() {
-    Logger::Init("../../GateServer.log");
+    Logger::Init("./GateServer.log");
     ConfigMgr& gCfgMgr = ConfigMgr::Instance();
     std::string gate_port_str = gCfgMgr["GateServer"]["port"];
     unsigned short gate_port = std::stoi(gate_port_str);
